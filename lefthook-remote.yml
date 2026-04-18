@@ -1,0 +1,10 @@
+---
+pre-commit:
+  commands:
+    editorconfig-checker:
+      run: timeout ${LEFTHOOK_EDITORCONFIG_CHECKER_TIMEOUT:-30} editorconfig-checker {staged_files}
+
+pre-push:
+  commands:
+    editorconfig-checker:
+      run: timeout ${LEFTHOOK_EDITORCONFIG_CHECKER_TIMEOUT:-30} editorconfig-checker {push_files}
