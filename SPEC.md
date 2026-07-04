@@ -77,7 +77,7 @@ pre-push:
 | `.` | T3 | Add test for files with spaces in their names |
 | `.` | T4 | Add test for binary/non-text file handling |
 | `.` | T5 | Add test for mixed existing and non-existing files where existing files all pass |
-| `.` | T6 | Add `md` extension entry to `config/lefthook/file_size_limits.yml` |
+| `x` | T6 | Add `md` extension entry to `config/lefthook/file_size_limits.yml` |
 | `.` | T7 | Add `toml` extension entry to `config/lefthook/file_size_limits.yml` and a TOML linter lefthook remote for `.rtk/filters.toml` |
 | `.` | T8 | Add test for single existing conforming file among multiple non-existent files |
 | `.` | T9 | Add `sh` extension entry to `config/lefthook/file_size_limits.yml` |
@@ -87,5 +87,5 @@ pre-push:
 1. **`.envrc` missing `watch_file` entries.** The direnv skill requires watching `flake.nix`, `flake.lock`, and shell files for automatic reload. Currently `.envrc` contains only `use flake`, so changes to `dev.sh` or `flake.nix` do not trigger a direnv reload.
 2. **No markdownlint lefthook remote.** The project has a `.markdownlint.yml` configuration and 19 markdown files (README, CLAUDE.md, agent skills), but no markdownlint remote is listed in `lefthook.yml`. Per the linter skill, every tracked file type must have an assigned linter.
 3. **No TOML linter.** `.rtk/filters.toml` is tracked in git but has no corresponding linter in `lefthook.yml`.
-4. **Incomplete `file_size_limits.yml`.** The config covers `.lock`, `.nix`, `.bats`, and `.yml` extensions but omits `.md`, `.sh`, and `.toml` files tracked in the repo.
+4. **Incomplete `file_size_limits.yml`.** The config covers `.lock`, `.nix`, `.bats`, `.yml`, and `.md` extensions but omits `.sh` and `.toml` files tracked in the repo.
 5. **CI `fatal: $HOME not set` (2026-07-04).** `dev.sh` ran `lefthook install` unconditionally; in the CI nix shell `$HOME` is unset, causing git (called by lefthook) to fail. Fixed by guarding the call with `[ -z "${HOME:-}" ]`.
