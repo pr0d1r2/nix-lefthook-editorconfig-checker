@@ -12,7 +12,7 @@ nix-lefthook-editorconfig-checker is a Nix flake that packages a lefthook-compat
 6. Multiple files where at least one violates rules cause a non-zero exit.
 7. The flake builds on all four supported systems: `aarch64-darwin`, `x86_64-darwin`, `x86_64-linux`, `aarch64-linux`.
 8. `dev.sh` exports `BATS_LIB_PATH` from the `@BATS_LIB_PATH@` placeholder substituted at build time.
-9. `dev.sh` runs `lefthook install` only when `.git/hooks/pre-commit` is absent.
+9. `dev.sh` runs `lefthook install` only when `$HOME` is set and `.git/hooks/pre-commit` is absent.
 10. Every lefthook command has a timeout (default 30 seconds via `LEFTHOOK_EDITORCONFIG_CHECKER_TIMEOUT`).
 11. Every lefthook check runs in both `pre-commit` and `pre-push`.
 12. No embedded shell code exists in nix files; shell is read from external `.sh` files via `builtins.readFile`.
@@ -88,3 +88,4 @@ pre-push:
 2. **No markdownlint lefthook remote.** The project has a `.markdownlint.yml` configuration and 19 markdown files (README, CLAUDE.md, agent skills), but no markdownlint remote is listed in `lefthook.yml`. Per the linter skill, every tracked file type must have an assigned linter.
 3. **No TOML linter.** `.rtk/filters.toml` is tracked in git but has no corresponding linter in `lefthook.yml`.
 4. **Incomplete `file_size_limits.yml`.** The config covers `.lock`, `.nix`, `.bats`, and `.yml` extensions but omits `.md`, `.sh`, and `.toml` files tracked in the repo.
+5. **CI `fatal: $HOME not set` (2026-07-04).** `dev.sh` ran `lefthook install` unconditionally; in the CI nix shell `$HOME` is unset, causing git (called by lefthook) to fail. Fixed by guarding the call with `[ -z "${HOME:-}" ]`.
