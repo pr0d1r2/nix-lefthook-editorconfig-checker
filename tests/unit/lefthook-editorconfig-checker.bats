@@ -59,3 +59,20 @@ EOF
     run lefthook-editorconfig-checker "$TMP/good.txt" "$TMP/bad.txt"
     assert_failure
 }
+
+@test "conforming file with spaces in name passes" {
+    printf 'name: test\nvalue: 42\n' > "$TMP/my file.txt"
+    run lefthook-editorconfig-checker "$TMP/my file.txt"
+    assert_success
+}
+
+@test "violating file with spaces in name fails" {
+    printf 'trailing   \n' > "$TMP/my file.txt"
+    run lefthook-editorconfig-checker "$TMP/my file.txt"
+    assert_failure
+}
+
+@test "non-existent file with spaces in name is skipped" {
+    run lefthook-editorconfig-checker "$TMP/no such file.txt"
+    assert_success
+}
