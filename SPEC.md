@@ -72,7 +72,7 @@ pre-push:
 
 | status | id | goal |
 |---|---|---|
-| `.` | T1 | Add `watch_file` entries to `.envrc` for `flake.nix`, `flake.lock`, and `dev.sh` per direnv skill |
+| `x` | T1 | Add `watch_file` entries to `.envrc` for `flake.nix`, `flake.lock`, and `dev.sh` per direnv skill |
 | `.` | T2 | Add markdownlint lefthook remote — `.markdownlint.yml` config exists but no linter runs on `.md` files |
 | `.` | T3 | Add test for files with spaces in their names |
 | `.` | T4 | Add test for binary/non-text file handling |
