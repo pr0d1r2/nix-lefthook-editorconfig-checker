@@ -24,7 +24,7 @@ nix-lefthook-editorconfig-checker is a Nix flake that packages a lefthook-compat
 
 ### CLI
 
-```
+```text
 lefthook-editorconfig-checker [file ...]
 ```
 
@@ -62,7 +62,7 @@ pre-push:
 | File | Format | Purpose |
 |---|---|---|
 | `.editorconfig` | INI-like | editorconfig rules applied to all files |
-| `lefthook.yml` | YAML | Local lefthook hooks (16 remotes + 1 local command) |
+| `lefthook.yml` | YAML | Local lefthook hooks (17 remotes + 1 local command) |
 | `lefthook-remote.yml` | YAML | Config consumed by other projects via lefthook remote |
 | `.yamllint.yml` | YAML | yamllint configuration (truthy keys unchecked, line-length disabled) |
 | `.markdownlint.yml` | YAML | markdownlint configuration (MD013/line-length disabled) |
@@ -73,7 +73,7 @@ pre-push:
 | status | id | goal |
 |---|---|---|
 | `x` | T1 | Add `watch_file` entries to `.envrc` for `flake.nix`, `flake.lock`, and `dev.sh` per direnv skill |
-| `.` | T2 | Add markdownlint lefthook remote — `.markdownlint.yml` config exists but no linter runs on `.md` files |
+| `x` | T2 | Add markdownlint lefthook remote — `.markdownlint.yml` config exists but no linter runs on `.md` files |
 | `.` | T3 | Add test for files with spaces in their names |
 | `.` | T4 | Add test for binary/non-text file handling |
 | `.` | T5 | Add test for mixed existing and non-existing files where existing files all pass |
