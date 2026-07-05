@@ -76,3 +76,23 @@ EOF
     run lefthook-editorconfig-checker "$TMP/no such file.txt"
     assert_success
 }
+
+@test "binary file is skipped" {
+    printf '\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR' > "$TMP/image.png"
+    run lefthook-editorconfig-checker "$TMP/image.png"
+    assert_success
+}
+
+@test "binary file among conforming text files passes" {
+    printf '\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR' > "$TMP/image.png"
+    printf 'name: test\nvalue: 42\n' > "$TMP/good.txt"
+    run lefthook-editorconfig-checker "$TMP/image.png" "$TMP/good.txt"
+    assert_success
+}
+
+@test "binary file among violating text files fails" {
+    printf '\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR' > "$TMP/image.png"
+    printf 'bad\t \n' > "$TMP/bad.txt"
+    run lefthook-editorconfig-checker "$TMP/image.png" "$TMP/bad.txt"
+    assert_failure
+}

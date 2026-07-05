@@ -75,7 +75,7 @@ pre-push:
 | `x` | T1 | Add `watch_file` entries to `.envrc` for `flake.nix`, `flake.lock`, and `dev.sh` per direnv skill |
 | `x` | T2 | Add markdownlint lefthook remote — `.markdownlint.yml` config exists but no linter runs on `.md` files |
 | `x` | T3 | Add test for files with spaces in their names |
-| `.` | T4 | Add test for binary/non-text file handling |
+| `x` | T4 | Add test for binary/non-text file handling |
 | `.` | T5 | Add test for mixed existing and non-existing files where existing files all pass |
 | `x` | T6 | Add `md` extension entry to `config/lefthook/file_size_limits.yml` |
 | `.` | T7 | Add `toml` extension entry to `config/lefthook/file_size_limits.yml` and a TOML linter lefthook remote for `.rtk/filters.toml` |
