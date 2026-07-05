@@ -20,6 +20,11 @@ setup() {
     assert_success
 }
 
+@test ".envrc watches lefthook-editorconfig-checker.sh" {
+    run grep 'watch_file lefthook-editorconfig-checker.sh' .envrc
+    assert_success
+}
+
 @test ".envrc uses flake" {
     run grep 'use flake' .envrc
     assert_success
