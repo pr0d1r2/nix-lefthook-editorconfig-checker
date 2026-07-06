@@ -9,3 +9,13 @@ setup() {
     run grep 'nix-lefthook-markdownlint' lefthook.yml
     assert_success
 }
+
+@test "lefthook.yml has taplo remote" {
+    run grep 'nix-lefthook-taplo' lefthook.yml
+    assert_success
+}
+
+@test "file_size_limits.yml has toml extension" {
+    run grep 'toml:' config/lefthook/file_size_limits.yml
+    assert_success
+}
