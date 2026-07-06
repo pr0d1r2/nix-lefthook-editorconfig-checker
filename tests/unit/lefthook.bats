@@ -19,3 +19,8 @@ setup() {
     run grep 'toml:' config/lefthook/file_size_limits.yml
     assert_success
 }
+
+@test "file_size_limits.yml has sh extension" {
+    run grep 'sh:' config/lefthook/file_size_limits.yml
+    assert_success
+}

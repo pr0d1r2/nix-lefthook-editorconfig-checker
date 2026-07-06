@@ -6,3 +6,4 @@ extensions:
   yml: 4096
   md: 8192
   toml: 4096
+  sh: 4096
