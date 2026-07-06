@@ -62,7 +62,7 @@ pre-push:
 | File | Format | Purpose |
 |---|---|---|
 | `.editorconfig` | INI-like | editorconfig rules applied to all files |
-| `lefthook.yml` | YAML | Local lefthook hooks (17 remotes + 1 local command) |
+| `lefthook.yml` | YAML | Local lefthook hooks (18 remotes + 1 local command) |
 | `lefthook-remote.yml` | YAML | Config consumed by other projects via lefthook remote |
 | `.yamllint.yml` | YAML | yamllint configuration (truthy keys unchecked, line-length disabled) |
 | `.markdownlint.yml` | YAML | markdownlint configuration (MD013/line-length disabled) |
@@ -78,7 +78,7 @@ pre-push:
 | `x` | T4 | Add test for binary/non-text file handling |
 | `x` | T5 | Add test for mixed existing and non-existing files where existing files all pass |
 | `x` | T6 | Add `md` extension entry to `config/lefthook/file_size_limits.yml` |
-| `.` | T7 | Add `toml` extension entry to `config/lefthook/file_size_limits.yml` and a TOML linter lefthook remote for `.rtk/filters.toml` |
+| `x` | T7 | Add `toml` extension entry to `config/lefthook/file_size_limits.yml` and a TOML linter lefthook remote for `.rtk/filters.toml` |
 | `.` | T8 | Add test for single existing conforming file among multiple non-existent files |
 | `.` | T9 | Add `sh` extension entry to `config/lefthook/file_size_limits.yml` |
 
