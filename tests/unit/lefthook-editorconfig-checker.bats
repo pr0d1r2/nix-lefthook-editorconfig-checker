@@ -103,3 +103,9 @@ EOF
     run lefthook-editorconfig-checker "$TMP/good1.txt" /nonexistent/a.txt "$TMP/good2.txt" /nonexistent/b.txt
     assert_success
 }
+
+@test "single existing conforming file among multiple non-existent files" {
+    printf 'name: test\n' > "$TMP/good.txt"
+    run lefthook-editorconfig-checker /nonexistent/a.txt "$TMP/good.txt" /nonexistent/b.txt /nonexistent/c.txt
+    assert_success
+}

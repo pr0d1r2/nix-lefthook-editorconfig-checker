@@ -79,7 +79,7 @@ pre-push:
 | `x` | T5 | Add test for mixed existing and non-existing files where existing files all pass |
 | `x` | T6 | Add `md` extension entry to `config/lefthook/file_size_limits.yml` |
 | `x` | T7 | Add `toml` extension entry to `config/lefthook/file_size_limits.yml` and a TOML linter lefthook remote for `.rtk/filters.toml` |
-| `.` | T8 | Add test for single existing conforming file among multiple non-existent files |
+| `x` | T8 | Add test for single existing conforming file among multiple non-existent files |
 | `.` | T9 | Add `sh` extension entry to `config/lefthook/file_size_limits.yml` |
 
 ## §B — Bugs / Known Issues
