@@ -96,3 +96,10 @@ EOF
     run lefthook-editorconfig-checker "$TMP/image.png" "$TMP/bad.txt"
     assert_failure
 }
+
+@test "mixed existing and non-existing files where existing files all pass" {
+    printf 'name: test\n' > "$TMP/good1.txt"
+    printf 'value: 42\n' > "$TMP/good2.txt"
+    run lefthook-editorconfig-checker "$TMP/good1.txt" /nonexistent/a.txt "$TMP/good2.txt" /nonexistent/b.txt
+    assert_success
+}
