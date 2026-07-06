@@ -80,7 +80,7 @@ pre-push:
 | `x` | T6 | Add `md` extension entry to `config/lefthook/file_size_limits.yml` |
 | `x` | T7 | Add `toml` extension entry to `config/lefthook/file_size_limits.yml` and a TOML linter lefthook remote for `.rtk/filters.toml` |
 | `x` | T8 | Add test for single existing conforming file among multiple non-existent files |
-| `.` | T9 | Add `sh` extension entry to `config/lefthook/file_size_limits.yml` |
+| `x` | T9 | Add `sh` extension entry to `config/lefthook/file_size_limits.yml` |
 
 ## §B — Bugs / Known Issues
 
