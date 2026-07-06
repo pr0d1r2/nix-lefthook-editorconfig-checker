@@ -76,7 +76,7 @@ pre-push:
 | `x` | T2 | Add markdownlint lefthook remote — `.markdownlint.yml` config exists but no linter runs on `.md` files |
 | `x` | T3 | Add test for files with spaces in their names |
 | `x` | T4 | Add test for binary/non-text file handling |
-| `.` | T5 | Add test for mixed existing and non-existing files where existing files all pass |
+| `x` | T5 | Add test for mixed existing and non-existing files where existing files all pass |
 | `x` | T6 | Add `md` extension entry to `config/lefthook/file_size_limits.yml` |
 | `.` | T7 | Add `toml` extension entry to `config/lefthook/file_size_limits.yml` and a TOML linter lefthook remote for `.rtk/filters.toml` |
 | `.` | T8 | Add test for single existing conforming file among multiple non-existent files |
