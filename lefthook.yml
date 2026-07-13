@@ -11,10 +11,6 @@ remotes:
     ref: main
     configs:
       - lefthook-remote.yml
-  - git_url: https://github.com/pr0d1r2/nix-lefthook-shfmt
-    ref: main
-    configs:
-      - lefthook-remote.yml
   - git_url: https://github.com/pr0d1r2/nix-lefthook-statix
     ref: main
     configs:
@@ -81,9 +77,15 @@ pre-commit:
   commands:
     editorconfig-checker:
       run: timeout ${LEFTHOOK_EDITORCONFIG_CHECKER_TIMEOUT:-30} editorconfig-checker {staged_files}
+    shfmt:
+      glob: "*.sh"
+      run: timeout ${LEFTHOOK_SHFMT_TIMEOUT:-30} shfmt -d -i 2 -ci {staged_files}
 
 pre-push:
   parallel: true
   commands:
     editorconfig-checker:
       run: timeout ${LEFTHOOK_EDITORCONFIG_CHECKER_TIMEOUT:-30} editorconfig-checker {push_files}
+    shfmt:
+      glob: "*.sh"
+      run: timeout ${LEFTHOOK_SHFMT_TIMEOUT:-30} shfmt -d -i 2 -ci {push_files}
