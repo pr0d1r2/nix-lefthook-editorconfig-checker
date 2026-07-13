@@ -24,3 +24,13 @@ setup() {
     run grep 'sh:' config/lefthook/file_size_limits.yml
     assert_success
 }
+
+@test "lefthook.yml has local shfmt pre-commit override with 2-space indent" {
+    run bash -c "sed -n '/^pre-commit:/,/^pre-push:/p' lefthook.yml | grep 'shfmt -d -i 2 -ci'"
+    assert_success
+}
+
+@test "lefthook.yml has local shfmt pre-push override with 2-space indent" {
+    run bash -c "sed -n '/^pre-push:/,\$p' lefthook.yml | grep 'shfmt -d -i 2 -ci'"
+    assert_success
+}
