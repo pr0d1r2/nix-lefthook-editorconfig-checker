@@ -1,6 +1,15 @@
+# SPEC
+
 ## §D — Description
 
-nix-lefthook-editorconfig-checker is a Nix flake that packages a lefthook-compatible wrapper around editorconfig-checker. It filters non-existent files from lefthook's staged/pushed file arguments, runs editorconfig-checker on the remaining real files, and exits cleanly when no files need checking. The wrapper can be consumed as a lefthook remote (zero-config YAML import) or as a flake input added to a project's devShell. It targets Nix-based development workflows on Linux and macOS (arm64 and x86_64) where editorconfig compliance is enforced via git hooks.
+nix-lefthook-editorconfig-checker is a Nix flake that packages a
+lefthook-compatible wrapper around editorconfig-checker. It filters
+non-existent files from lefthook's staged/pushed file arguments, runs
+editorconfig-checker on the remaining real files, and exits cleanly when no
+files need checking. The wrapper can be consumed as a lefthook remote
+(zero-config YAML import) or as a flake input added to a project's devShell.
+It targets Nix-based development workflows on Linux and macOS (arm64 and
+x86_64) where editorconfig compliance is enforced via git hooks.
 
 ## §V — Invariants
 
@@ -89,3 +98,4 @@ pre-push:
 3. **No TOML linter.** `.rtk/filters.toml` is tracked in git but has no corresponding linter in `lefthook.yml`.
 4. **Incomplete `file_size_limits.yml`.** The config covers `.lock`, `.nix`, `.bats`, `.yml`, and `.md` extensions but omits `.sh` and `.toml` files tracked in the repo.
 5. **CI `fatal: $HOME not set` (2026-07-04).** `dev.sh` ran `lefthook install` unconditionally; in the CI nix shell `$HOME` is unset, causing git (called by lefthook) to fail. Fixed by guarding the call with `[ -z "${HOME:-}" ]`.
+6. **CI markdownlint failures (2026-07-14).** `lefthook.yml` invoked `lefthook-markdownlint-agentic`, but no flake input provided it (exit 127); SPEC.md also failed strict `markdownlint` (no `#` H1, 563-char line). Fixed by adding the `nix-lefthook-markdownlint-agentic` input and conforming SPEC.md.
