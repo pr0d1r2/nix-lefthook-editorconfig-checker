@@ -1,5 +1,5 @@
 {
-  description = "CHANGEME";
+  description = "Lefthook-compatible editorconfig-checker check";
 
   nixConfig = {
     extra-substituters = [ "https://pr0d1r2.cachix.org" ];
@@ -47,6 +47,11 @@
     in
     {
       packages = forAllSystems (pkgs: {
+        default = pkgs.writeShellApplication {
+          name = "lefthook-editorconfig-checker";
+          runtimeInputs = [ pkgs.editorconfig-checker ];
+          text = builtins.readFile ./lefthook-editorconfig-checker.sh;
+        };
         setting = (set-and-setting.lib.mkSetting { inherit pkgs; }).materialized;
       });
 
@@ -59,7 +64,11 @@
         in
         set-and-setting.lib.mkDevShells {
           inherit pkgs;
-          basePackages = [ mdlintAgentic ] ++ mat.packages;
+          basePackages = [
+            self.packages.${sys}.default
+            mdlintAgentic
+          ]
+          ++ mat.packages;
           settingHook = ''
             ${self.packages.${sys}.setting}/bin/sync-setting .
             _assemble_out="$(mktemp -d)"
@@ -84,6 +93,7 @@
             inherit pkgs;
             projectRoot = ./.;
           };
+          package = self.packages.${pkgs.stdenv.hostPlatform.system}.default;
           default = pkgs.runCommand "checks" { } "touch $out";
         }
       );
