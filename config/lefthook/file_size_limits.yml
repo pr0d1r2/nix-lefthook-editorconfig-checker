@@ -1,7 +1,7 @@
 default: 4096
 extensions:
-  lock: 65536
-  nix: 4096
+  lock: 1048576
+  nix: 8192
   bats: 4096
   yml: 4096
   md: 8192

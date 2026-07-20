@@ -99,3 +99,16 @@ pre-push:
 4. **Incomplete `file_size_limits.yml`.** The config covers `.lock`, `.nix`, `.bats`, `.yml`, and `.md` extensions but omits `.sh` and `.toml` files tracked in the repo.
 5. **CI `fatal: $HOME not set` (2026-07-04).** `dev.sh` ran `lefthook install` unconditionally; in the CI nix shell `$HOME` is unset, causing git (called by lefthook) to fail. Fixed by guarding the call with `[ -z "${HOME:-}" ]`.
 6. **CI markdownlint failures (2026-07-14).** `lefthook.yml` invoked `lefthook-markdownlint-agentic`, but no flake input provided it (exit 127); SPEC.md also failed strict `markdownlint` (no `#` H1, 563-char line). Fixed by adding the `nix-lefthook-markdownlint-agentic` input and conforming SPEC.md.
+7. **CI coherence failures (2026-07-19).** `nix run .#confirm` coherence check failed:
+    `lefthook-markdownlint`, `lefthook-markdownlint-agentic`, and `lefthook-yamllint`
+    referenced in generated `lefthook.yml` but not on PATH within the confirm app.
+    The confirm app's `runtimeInputs` only listed basic utils, not the materialized
+    fragment packages. Also, unused flake inputs inflated `flake.lock` past the
+    file-size limit. Fixed by adding `mat.packages` to confirm app runtimeInputs,
+    extracting embedded shell to `confirm.sh`, and removing unused inputs.
+8. **CI editorconfig-checker and file-size-check failures (2026-07-19).** `SPEC.md`
+    lines 103-108 used 3-space indentation instead of the 2-space multiple required
+    by `.editorconfig`. Additionally, `file_size_limits.yml` had `.lock` at 65536
+    and `.nix` at 4096, too small for the 797KB `flake.lock` (1186 transitive
+    inputs from `set-and-setting`) and 4198-byte `flake.nix`. Fixed by re-indenting
+    SPEC.md to 4 spaces and raising limits to 1048576 (`.lock`) and 8192 (`.nix`).
