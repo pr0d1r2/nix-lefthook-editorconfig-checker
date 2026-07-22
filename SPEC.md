@@ -112,3 +112,7 @@ pre-push:
     and `.nix` at 4096, too small for the 797KB `flake.lock` (1186 transitive
     inputs from `set-and-setting`) and 4198-byte `flake.nix`. Fixed by re-indenting
     SPEC.md to 4 spaces and raising limits to 1048576 (`.lock`) and 8192 (`.nix`).
+9. **CI file-size-check failure after pin refresh (2026-07-22).** The generated
+    `flake.lock` grew to 1,076,316 bytes as its dependency graph reached 1,635
+    nodes, exceeding the 1 MiB `.lock` limit. Fixed by raising the generated
+    lockfile limit to 1.25 MiB while retaining size checks for all file types.
