@@ -116,3 +116,7 @@ pre-push:
     `flake.lock` grew to 1,076,316 bytes as its dependency graph reached 1,635
     nodes, exceeding the 1 MiB `.lock` limit. Fixed by raising the generated
     lockfile limit to 1.25 MiB while retaining size checks for all file types.
+10. **CI file-size-check failure after pin refresh (2026-07-23).** The generated
+    `flake.lock` grew to 1,317,097 bytes, exceeding the 1.25 MiB `.lock` limit.
+    Fixed by raising the lockfile limit to 1.5 MiB while retaining size checks
+    for all file types.
