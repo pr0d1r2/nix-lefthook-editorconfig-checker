@@ -124,3 +124,5 @@ pre-push:
     `flake.lock` grew to 1,804,404 bytes, exceeding the 1.5 MiB `.lock` limit.
     Fixed by raising the lockfile limit to 2 MiB while retaining size checks
     for all file types.
+12. **CI file-size-check failure after pin refresh (2026-07-27).** `flake.lock`
+    grew to 2,298,751 bytes; raised its limit from 2 MiB to 2.5 MiB.
