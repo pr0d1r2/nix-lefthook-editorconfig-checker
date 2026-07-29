@@ -11,11 +11,6 @@
     nixpkgs.follows = "nixpkgs-lock/nixpkgs";
 
     set-and-setting.url = "github:pr0d1r2/set-and-setting";
-
-    nix-lefthook-markdownlint-agentic = {
-      url = "github:pr0d1r2/nix-lefthook-markdownlint-agentic";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =
@@ -23,19 +18,11 @@
       self,
       nixpkgs,
       set-and-setting,
-      nix-lefthook-markdownlint-agentic,
       ...
     }:
     let
-      supportedSystems = [
-        "aarch64-darwin"
-        "x86_64-darwin"
-        "x86_64-linux"
-        "aarch64-linux"
-      ];
-      forAllSystems =
-        f: nixpkgs.lib.genAttrs supportedSystems (system: f nixpkgs.legacyPackages.${system});
-
+      sas = set-and-setting.inputs.set-and-setting;
+      supportedSystems = (import "${set-and-setting}/flake/systems.nix" { inherit nixpkgs; }).supported;
       fragments = [
         "base"
         "nix"
@@ -45,105 +32,22 @@
         "yaml"
       ];
     in
-    {
-      packages = forAllSystems (pkgs: {
-        default = pkgs.writeShellApplication {
-          name = "lefthook-editorconfig-checker";
-          runtimeInputs = [ pkgs.editorconfig-checker ];
-          text = builtins.readFile ./lefthook-editorconfig-checker.sh;
+    (import "${set-and-setting}/set/lib/mk-consumer-flake.nix" {
+      inherit supportedSystems;
+    })
+      {
+        inherit self nixpkgs fragments;
+        set-and-setting = sas;
+        src = ./.;
+        extraPackages = pkgs: {
+          default = pkgs.writeShellApplication {
+            name = "lefthook-editorconfig-checker";
+            runtimeInputs = [ pkgs.editorconfig-checker ];
+            text = builtins.readFile ./lefthook-editorconfig-checker.sh;
+          };
         };
-        setting = (set-and-setting.lib.mkSetting { inherit pkgs; }).materialized;
-      });
-
-      devShells = forAllSystems (
-        pkgs:
-        let
-          mat = set-and-setting.lib.materializationFor { inherit pkgs fragments; };
-          sys = pkgs.stdenv.hostPlatform.system;
-          mdlintAgentic = nix-lefthook-markdownlint-agentic.packages.${sys}.default;
-        in
-        set-and-setting.lib.mkDevShells {
-          inherit pkgs;
-          basePackages = [
-            self.packages.${sys}.default
-            mdlintAgentic
-          ]
-          ++ mat.packages;
-          settingHook = ''
-            ${self.packages.${sys}.setting}/bin/sync-setting .
-            _assemble_out="$(mktemp -d)"
-            FRAGMENTS="${builtins.concatStringsSep " " fragments}" \
-              out="$_assemble_out" \
-              FRAGMENTS_DIR="${set-and-setting}/setting/integrations/lefthook" \
-              bash "${set-and-setting}/setting/lib/assemble-lefthook.sh"
-            cp -f "$_assemble_out/lefthook.yml" lefthook.yml
-            rm -rf "$_assemble_out"
-          '';
-        }
-      );
-
-      checks = forAllSystems (
-        pkgs:
-        (set-and-setting.lib.checksFor {
-          inherit pkgs fragments;
-          src = ./.;
-        })
-        // {
-          dep-graph = set-and-setting.lib.mkDepGraphCheck {
-            inherit pkgs;
-            projectRoot = ./.;
-          };
+        extraChecks = pkgs: {
           package = self.packages.${pkgs.stdenv.hostPlatform.system}.default;
-          default = pkgs.runCommand "checks" { } "touch $out";
-        }
-      );
-
-      apps = forAllSystems (
-        pkgs:
-        let
-          mat = set-and-setting.lib.materializationFor { inherit pkgs fragments; };
-          sys = pkgs.stdenv.hostPlatform.system;
-          mdlintAgentic = nix-lefthook-markdownlint-agentic.packages.${sys}.default;
-        in
-        {
-          confirm = {
-            type = "app";
-            program = "${
-              pkgs.writeShellApplication {
-                name = "confirm";
-                runtimeInputs = [
-                  pkgs.coreutils
-                  pkgs.diffutils
-                  pkgs.findutils
-                  pkgs.gawk
-                  pkgs.git
-                  pkgs.gnugrep
-                  mdlintAgentic
-                ]
-                ++ mat.packages;
-                text =
-                  builtins.replaceStrings
-                    [
-                      "@FRAGMENTS_DIR@"
-                      "@ASSEMBLE_SCRIPT@"
-                      "@DETECT_SCRIPT@"
-                      "@SETTING_SRC@"
-                      "@CONFIRM_SCRIPT@"
-                      "@CONFIRM_REV@"
-                    ]
-                    [
-                      "${set-and-setting}/setting/integrations/lefthook"
-                      "${set-and-setting}/setting/lib/assemble-lefthook.sh"
-                      "${set-and-setting}/setting/lib/detect-fragments.sh"
-                      "${self.packages.${sys}.setting}"
-                      "${set-and-setting}/lib/confirm.sh"
-                      "${set-and-setting.rev or "unknown"}"
-                    ]
-                    (builtins.readFile ./confirm.sh);
-              }
-            }/bin/confirm";
-          };
-        }
-      );
-    };
+        };
+      };
 }

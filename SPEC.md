@@ -126,3 +126,12 @@ pre-push:
     for all file types.
 12. **CI file-size-check failure after pin refresh (2026-07-27).** `flake.lock`
     grew to 2,298,751 bytes; raised its limit from 2 MiB to 2.5 MiB.
+13. **CI `attribute 'lib' missing` after pin refresh (2026-07-29).** `nix flake
+    update` updated `set-and-setting` to a version that no longer exports `lib`
+    directly, breaking all `set-and-setting.lib.*` calls. Fixed by migrating
+    `flake.nix` to use `mk-consumer-flake.nix` from the updated
+    `set-and-setting` source, accessing the inner `set-and-setting` (which
+    retains `lib`) via `set-and-setting.inputs.set-and-setting`. Also removed
+    the now-redundant `nix-lefthook-markdownlint-agentic` flake input (covered
+    by the framework's materialization), shrinking `flake.lock` from 3.3 MB to
+    179 KB.
