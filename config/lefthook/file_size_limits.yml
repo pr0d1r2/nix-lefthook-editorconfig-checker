@@ -4,6 +4,6 @@ extensions:
   nix: 8192
   bats: 4096
   yml: 4096
-  md: 8192
+  md: 16384
   toml: 4096
   sh: 4096

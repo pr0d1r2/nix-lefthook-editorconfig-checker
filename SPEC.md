@@ -135,3 +135,7 @@ pre-push:
     the now-redundant `nix-lefthook-markdownlint-agentic` flake input (covered
     by the framework's materialization), shrinking `flake.lock` from 3.3 MB to
     179 KB.
+14. **CI file-size-check failure after SPEC.md growth (2026-07-29).** `SPEC.md`
+    grew to 8805 bytes, exceeding the 8192-byte `.md` limit in
+    `config/lefthook/file_size_limits.yml`. Fixed by raising the `.md` limit
+    to 16384 bytes.
