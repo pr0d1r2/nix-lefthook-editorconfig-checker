@@ -5,13 +5,14 @@ setup() {
     load "${BATS_LIB_PATH}/bats-assert/load.bash"
 }
 
-@test "lefthook.yml has markdownlint remote" {
-    run grep 'nix-lefthook-markdownlint' lefthook.yml
+@test "lefthook.yml runs markdownlint in both hooks" {
+    run grep -c 'lefthook-markdownlint' lefthook.yml
     assert_success
+    assert_output "4"
 }
 
-@test "lefthook.yml has taplo remote" {
-    run grep 'nix-lefthook-taplo' lefthook.yml
+@test "lefthook.yml runs the repository guardrails" {
+    run grep -E 'lefthook-(gitleaks|git-conflict-markers|git-no-local-paths|yamllint)' lefthook.yml
     assert_success
 }
 
@@ -25,12 +26,7 @@ setup() {
     assert_success
 }
 
-@test "lefthook.yml has local shfmt pre-commit override with 2-space indent" {
-    run bash -c "sed -n '/^pre-commit:/,/^pre-push:/p' lefthook.yml | grep 'shfmt -d -i 2 -ci'"
-    assert_success
-}
-
-@test "lefthook.yml has local shfmt pre-push override with 2-space indent" {
-    run bash -c "sed -n '/^pre-push:/,\$p' lefthook.yml | grep 'shfmt -d -i 2 -ci'"
+@test "lefthook commands use staged or pushed file arguments" {
+    run grep -E '\{(staged|push)_files\}' lefthook.yml
     assert_success
 }
