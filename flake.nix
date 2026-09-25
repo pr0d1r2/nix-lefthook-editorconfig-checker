@@ -1,5 +1,5 @@
 {
-  description = "CHANGEME";
+  description = "Lefthook-compatible editorconfig-checker check";
 
   nixConfig = {
     extra-substituters = [ "https://pr0d1r2.cachix.org" ];
@@ -10,7 +10,11 @@
     nixpkgs-lock.url = "github:pr0d1r2/nixpkgs-lock";
     nixpkgs.follows = "nixpkgs-lock/nixpkgs";
 
-    set-and-setting.url = "github:pr0d1r2/set-and-setting";
+    set-and-setting = {
+      url = "github:pr0d1r2/set-and-setting";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs-lock.follows = "nixpkgs-lock";
+    };
   };
 
   outputs =
@@ -31,5 +35,42 @@
         "yaml"
       ];
       src = ./.;
+      extraPackages = pkgs: {
+        default = pkgs.writeShellApplication {
+          name = "lefthook-editorconfig-checker";
+          runtimeInputs = [ pkgs.editorconfig-checker ];
+          text = builtins.readFile ./lefthook-editorconfig-checker.sh;
+        };
+      };
+      extraChecks = pkgs: {
+        package = self.packages.${pkgs.stdenv.hostPlatform.system}.default;
+      };
+    }
+    // {
+      # The unit tests call the wrapper by name, so every devShell must put
+      # the packaged wrapper on PATH.
+      devShells =
+        builtins.mapAttrs
+          (
+            system: shells:
+            builtins.mapAttrs (
+              _name: shell:
+              shell.overrideAttrs (old: {
+                nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ self.packages.${system}.default ];
+              })
+            ) shells
+          )
+          (set-and-setting.lib.mkConsumerFlake {
+            inherit self nixpkgs set-and-setting;
+            fragments = [
+              "base"
+              "nix"
+              "shell"
+              "ascii"
+              "markdown"
+              "yaml"
+            ];
+            src = ./.;
+          }).devShells;
     };
 }
