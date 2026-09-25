@@ -1,5 +1,5 @@
 {
-  description = "CHANGEME";
+  description = "Lefthook-compatible editorconfig-checker check";
 
   nixConfig = {
     extra-substituters = [ "https://pr0d1r2.cachix.org" ];
@@ -35,5 +35,15 @@
         "yaml"
       ];
       src = ./.;
+      extraPackages = pkgs: {
+        default = pkgs.writeShellApplication {
+          name = "lefthook-editorconfig-checker";
+          runtimeInputs = [ pkgs.editorconfig-checker ];
+          text = builtins.readFile ./lefthook-editorconfig-checker.sh;
+        };
+      };
+      extraChecks = pkgs: {
+        package = self.packages.${pkgs.stdenv.hostPlatform.system}.default;
+      };
     };
 }
